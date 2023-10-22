@@ -13,8 +13,9 @@ public class WordCount {
         String line = input.nextLine();
         String[] words = line.split("\s+");
         for (String word: words){
-            word = word.toLowerCase(); 
-            if (wordCount.containsKey(word)) {
+            String wordLowerCase = word.toLowerCase(); 
+            String wordUpperCase = word.toUpperCase();
+            if (wordCount.containsKey(wordLowerCase) || wordCount.containsKey(wordUpperCase)) {
                 wordCount.put(word, wordCount.get(word) + 1);
             } else {
                 wordCount.put(word, 1);
