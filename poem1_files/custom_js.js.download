@@ -1,0 +1,9 @@
+var $j = jQuery.noConflict();
+
+$j(document).ready(function() {
+	"use strict";
+
+	if(navigator.userAgent.toLowerCase().indexOf('chrome')>-1){
+    $j('body.home .full_width').css('position','static');
+}});
+
