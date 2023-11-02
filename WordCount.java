@@ -1,48 +1,74 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.io.IOException;
+import java.util.StringTokenizer;
+import javax.naming.Context;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WordCount {
-   public static void main(String args[]) throws FileNotFoundException{
-    boolean div = false;
-    Scanner input;
-    Map<String, Integer> wordCount = new HashMap<>();
-    String path = System.getProperty("user.dir");
-    File folder = new File(path);
-    File[] files = folder.listFiles();
-    for (File file : files) {
-        if (file.isFile() && file.getName().endsWith(".html")) {
-            input = new Scanner(file);
-            while (input.hasNextLine()){
-            String line = input.nextLine();
-            if (line.matches(".*<div class=\"post_description\">.*")) {
-                div = true;
-            }
-            if (line.trim().equals("</div>")) {
-                div = false;
-            }
-            if (div) {
-                String[] words = line.split("\s+");
-                for (String word: words){
-                    word = word.replaceAll("<[^>]*>", "");
-                    word = word.replaceAll("[^a-zA-Z]+", "");
-                    word = word.replaceAll("^href\\S*", "");
-                    String wordLowerCase = word.toLowerCase();
-                    if (wordCount.containsKey(wordLowerCase)) {
-                        wordCount.put(wordLowerCase, wordCount.get(wordLowerCase) + 1);
-                    } else {
-                        wordCount.put(wordLowerCase, 1);}
+    public static class TokenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
+        private final static IntWritable one = new IntWritable(1);
+        private Text wordText = new Text();
+
+        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+            boolean div = false;
+            String line = value.toString();
+            String[] lines = line.split("\n");
+            for (String lineSplit : lines) {
+                if (lineSplit.matches(".*<div class=\"post_description\">.*")) {
+                    div = true;
+                }
+                if (lineSplit.trim().equals("</div>")) {
+                    div = false;
+                }
+                if (div) {
+                    String[] words = lineSplit.split("\\s");
+                    for (String word : words) {
+                        word = word.replaceAll("<[^>]*>", "");
+                        word = word.replaceAll("[^a-zA-Z]+", "");
+                        word = word.replaceAll("^href\\S*", "");
+                        String wordLowerCase = word.toLowerCase();
+                        wordText.set(wordLowerCase);
+                        context.write(wordText, one);
                     }
                 }
             }
-            input.close();
+        }    
+    }
+
+    public static class IntSumReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+        private IntWritable count = new IntWritable();
+        public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+            int sum = 0;
+            for (IntWritable val : values) {
+                sum += val.get();
+            }
+            count.set(sum);
+            context.write(key, count);
         }
     }
-    
-    for (Map.Entry<String, Integer> entry : wordCount.entrySet()) {
-        System.out.println(entry.getKey() + ": " + entry.getValue());
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "wordcount");
+        job.setJarByClass(WordCount.class);
+        job.setMapperClass(TokenizerMapper.class);
+        job.setCombinerClass(IntSumReducer.class);
+        job.setReducerClass(IntSumReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
-   }
+
 }
+
+
