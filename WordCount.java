@@ -1,6 +1,4 @@
 import java.io.IOException;
-import java.util.StringTokenizer;
-import javax.naming.Context;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -16,35 +14,33 @@ public class WordCount {
     public static class TokenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
         private final static IntWritable one = new IntWritable(1);
         private Text wordText = new Text();
+        private boolean div = false;
 
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            boolean div = false;
             String line = value.toString();
-            String[] lines = line.split("\n");
-            for (String lineSplit : lines) {
-                if (lineSplit.matches(".*<div class=\"post_description\">.*")) {
-                    div = true;
-                }
-                if (lineSplit.trim().equals("</div>")) {
-                    div = false;
-                }
-                if (div) {
-                    String[] words = lineSplit.split("\\s");
-                    for (String word : words) {
-                        word = word.replaceAll("<[^>]*>", "");
-                        word = word.replaceAll("[^a-zA-Z]+", "");
-                        word = word.replaceAll("^href\\S*", "");
-                        String wordLowerCase = word.toLowerCase();
-                        wordText.set(wordLowerCase);
-                        context.write(wordText, one);
-                    }
+            if (line.matches(".*<div class=\"post_description\">.*")) {
+                div = true;
+            }
+            if (line.trim().equals("</div>")) {
+                div = false;
+            }
+            if (div) {
+                String[] words = line.split("\\s+");
+                for (String word : words) {
+                    word = word.replaceAll("<[^>]*>", "");
+                    word = word.replaceAll("[^a-zA-Z]+", "");
+                    word = word.replaceAll("^href\\S*", "");
+                    String wordLowerCase = word.toLowerCase();
+                    wordText.set(wordLowerCase);
+                    context.write(wordText, one);
                 }
             }
-        }    
+        }
     }
 
     public static class IntSumReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         private IntWritable count = new IntWritable();
+
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
             int sum = 0;
             for (IntWritable val : values) {
@@ -68,7 +64,4 @@ public class WordCount {
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
-
 }
-
-
