@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.naming.Context;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -13,32 +13,43 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class RegexSearch {
-    public static class SearchMapper extends Mapper<Object, Text, Text, Text> {
-        private Text matchText = new Text();
+    public static class SearchMapper extends Mapper<LongWritable, Text, Text, Text> {
         private Text locationText = new Text();
         private Pattern pattern;
-        private boolean div;
-
+        private boolean divTag;
+        private Pattern startPattern = Pattern.compile(".*<div class=\"post_description\">.*");
+        private Pattern endPattern = Pattern.compile("</div>");
+        
         @Override
-        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            Matcher matcher = Pattern.compile("\\bh\\w*").matcher(value.toString());
-            int lineNumber = 0;
-            while (matcher.find()) {
-                String matchedString = matcher.group();
-                matchText.set(matchedString);
-                locationText.set("Line " + lineNumber + " Position " + matcher.start());
-                context.write(locationText, matchText); 
-                lineNumber++;
-            }          
+        public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException { 
+            Matcher startMatcher = startPattern.matcher(value.toString());
+            Matcher endMatcher = endPattern.matcher(value.toString());
+            int lineNumber; 
+            if (startMatcher.matches()) {
+                divTag = true;
+            }
+            if (endMatcher.matches()) {
+                divTag = false;
+            }
+            if (divTag) {
+                Matcher contentMatcher = Pattern.compile("\\b(?!https?|href)\\w*(?i)h\\w*").matcher(value.toString());
+                while (contentMatcher.find()) {
+                    String matchedString = contentMatcher.group();
+                    locationText.set("Line " + key);
+                    context.write(new Text(matchedString), locationText); 
+                }
+                
+            }  
         }
     }
 
     public static class SearchReducer extends Reducer<Text, Text, Text, Text> {
-        @Override
-        public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+        public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException { 
+            StringBuilder locations = new StringBuilder();
             for (Text value : values) {
-                context.write(key, value);
+                locations.append(value.toString()).append(" ");
             }
+            context.write(key, new Text(locations.toString()));
         }
     }
 
@@ -46,9 +57,11 @@ public class RegexSearch {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "Regex Search");
         job.setJarByClass(RegexSearch.class);
-        job.setInputFormatClass(TextInputFormat.class);
+        job.setInputFormatClass(TextInputFormat.class);   
         job.setMapperClass(SearchMapper.class);
         job.setReducerClass(SearchReducer.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(Text.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
