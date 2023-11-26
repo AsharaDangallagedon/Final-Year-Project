@@ -12,6 +12,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
+
 public class RegexSearch {
     public static class SearchMapper extends Mapper<LongWritable, Text, Text, Text> {
         private Text locationText = new Text();
@@ -19,12 +20,11 @@ public class RegexSearch {
         private boolean divTag;
         private Pattern startPattern = Pattern.compile(".*<div class=\"post_description\">.*");
         private Pattern endPattern = Pattern.compile("</div>");
-        
+
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException { 
             Matcher startMatcher = startPattern.matcher(value.toString());
             Matcher endMatcher = endPattern.matcher(value.toString());
-            int lineNumber; 
             if (startMatcher.matches()) {
                 divTag = true;
             }
@@ -57,7 +57,7 @@ public class RegexSearch {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "Regex Search");
         job.setJarByClass(RegexSearch.class);
-        job.setInputFormatClass(TextInputFormat.class);   
+        job.setInputFormatClass(LineNumberInputFormat.class); 
         job.setMapperClass(SearchMapper.class);
         job.setReducerClass(SearchReducer.class);
         job.setMapOutputKeyClass(Text.class);
