@@ -1,13 +1,15 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -46,8 +48,16 @@ public class RegexSearch {
     public static class SearchReducer extends Reducer<Text, Text, Text, Text> {
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException { 
             StringBuilder locations = new StringBuilder();
+            ArrayList<String> uniqueValues = new ArrayList<>();
             for (Text value : values) {
-                locations.append(value.toString()).append(" ");
+                String valueString = value.toString();
+                if (!uniqueValues.contains(valueString)) {
+                    uniqueValues.add(valueString);
+                    locations.append(valueString).append(", ");
+                }
+            }
+            if (locations.length() > 0) {
+                locations.deleteCharAt(locations.length() - 2);
             }
             context.write(key, new Text(locations.toString()));
         }
