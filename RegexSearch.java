@@ -20,8 +20,8 @@ public class RegexSearch {
         private Text locationText = new Text();
         private Pattern pattern;
         private boolean divTag;
-        private Pattern startPattern = Pattern.compile(".*<div class=\"post_description\">.*");
-        private Pattern endPattern = Pattern.compile("</div>");
+        private Pattern startPattern = Pattern.compile("<div id=\"main-text\">");
+        private Pattern endPattern = Pattern.compile("<div id=\"bibliography\">");
 
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException { 
