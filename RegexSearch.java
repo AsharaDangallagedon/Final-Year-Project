@@ -20,7 +20,7 @@ public class RegexSearch {
     public static class SearchMapper extends Mapper<LongWritable, Text, Text, Text> {
         private Text locationText = new Text();
         private Pattern pattern;
-        private boolean divTag;
+        private boolean divTag=false;
         private Pattern startPattern = Pattern.compile("<div id=\"main-text\">");
         private Pattern endPattern = Pattern.compile("<div id=\"bibliography\">");
 
