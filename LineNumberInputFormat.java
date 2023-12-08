@@ -10,7 +10,10 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.LineRecordReader;
 
 public class LineNumberInputFormat extends FileInputFormat<LongWritable, Text> {
-
+    //the code underneath was borrowed and modified from mainly 3 sources, as the conversion from ByteOffset to line number was not inherently important to solving problem 2
+    //https://gist.github.com/dedunumax/96594b09d0f566e88ced
+    //https://www.kamalsblog.com/2017/07/custom-n-line-record-reader-in-hadoop.html?m=1
+    //https://stackoverflow.com/questions/15598537/how-to-set-custom-input-format-in-mapreduce
     @Override
     public RecordReader<LongWritable, Text> createRecordReader(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
         return new LineNumberRecordReader();
