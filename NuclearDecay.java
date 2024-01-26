@@ -25,7 +25,7 @@ public class NuclearDecay {
                     massExcessUncertainty.set(Double.parseDouble(massExcessColumn));
                     context.write(new Text("Mean: "), massExcessUncertainty);
                 } catch (NumberFormatException e) {
-                    System.out.println("There was a problem with the column: " + "\\\"" + massExcessColumn + "\\\"");
+                    System.out.println("There was a problem with the value: " + "\\\"" + massExcessColumn + "\\\"");
                 }
             }
         }
@@ -59,6 +59,6 @@ public class NuclearDecay {
         job.setOutputValueClass(DoubleWritable.class); 
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        System.exit(job.waitForCompletion(true) ? 0 : 1); 
     }    
 }
