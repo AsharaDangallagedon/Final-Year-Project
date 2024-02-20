@@ -32,15 +32,15 @@ public class NuclearDecayMode {
     }
 
     public static class ModeReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
-        private final IntWritable mode = new IntWritable();
+        private final IntWritable cumulativecount = new IntWritable();
         @Override
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
             int sum = 0;
             for (IntWritable value : values) {
                 sum += value.get();
             }
-            mode.set(sum);
-            context.write(key, mode);
+            cumulativecount.set(sum);
+            context.write(key, cumulativecount);
         }
     }
     //update diary 
@@ -59,5 +59,5 @@ public class NuclearDecayMode {
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
         System.exit(job.waitForCompletion(true) ? 0 : 1); 
-    }    
+    }            
 }
