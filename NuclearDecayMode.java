@@ -33,19 +33,28 @@ public class NuclearDecayMode {
 
     public static class ModeReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         private final IntWritable cumulativecount = new IntWritable();
+        private Text mode = new Text();
+        private int maxCount;
+    
         @Override
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
             int sum = 0;
             for (IntWritable value : values) {
                 sum += value.get();
             }
-            cumulativecount.set(sum);
-            context.write(key, cumulativecount);
+            if (sum > maxCount) {
+                maxCount = sum;
+                mode.set(key);
+                cumulativecount.set(sum); 
+            }
+        }
+    
+        @Override
+        public void cleanup(Context context) throws IOException, InterruptedException {
+            context.write(mode, cumulativecount); 
         }
     }
-    //update diary 
-    //update daybook
-    //update RegexSearch.java
+    
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "mode calculation");

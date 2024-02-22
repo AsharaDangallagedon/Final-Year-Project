@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 public class NuclearDecay {
     public static class MeanMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
-        private DoubleWritable massExcessUncertainty = new DoubleWritable();
+        private DoubleWritable massExcessUncertainty = new DoubleWritable();  
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String[] columns = value.toString().split(",");
