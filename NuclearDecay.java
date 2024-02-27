@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -25,6 +28,7 @@ public class NuclearDecay {
                     context.write(new Text("Mean: "), new DoubleWritable(massExcessValue));            
                     context.write(new Text("Minimum: "), new DoubleWritable(massExcessValue));             
                     context.write(new Text("Maximum: "), new DoubleWritable(massExcessValue));
+                    context.write(new Text("Median: "), new DoubleWritable(massExcessValue));
                 } catch (NumberFormatException e) {
                     System.out.println("There was a problem with the value: " + "\\\"" + massExcessColumn + "\\\"");
                 }
@@ -38,10 +42,11 @@ public class NuclearDecay {
         private double maximumValue;
         private double sum = 0.0;
         private int count = 0;
+        private List<Double> valuesList = new ArrayList<>();
         @Override
         public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
             for (DoubleWritable value : values) {
-                double currentValue = value.get();  
+                double currentValue = value.get();
                 if (key.toString().equals("Minimum: ") && currentValue < minimumValue) {
                     minimumValue = currentValue;
                 }
@@ -52,19 +57,31 @@ public class NuclearDecay {
                     sum += currentValue;
                     count++;
                 }
+                if (key.toString().equals("Median: ")) {
+                    valuesList.add(currentValue);
+                }
             }
         }
+
         @Override
-        public void cleanup(Context context) throws IOException, InterruptedException {       
+        protected void cleanup(Context context) throws IOException, InterruptedException {
             if (count > 0) {
                 double mean = sum / count;
                 context.write(new Text("Mean: "), new DoubleWritable(mean));
             }
+            Collections.sort(valuesList);
+            int size = valuesList.size();
+            double median;
+            if (size % 2 == 0) {
+                median = (valuesList.get(size / 2 - 1) + valuesList.get(size / 2)) / 2.0;
+            } else {
+                median = valuesList.get(size / 2);
+            }
+            context.write(new Text("Median: "), new DoubleWritable(median));
             context.write(new Text("Minimum: "), new DoubleWritable(minimumValue));
             context.write(new Text("Maximum: "), new DoubleWritable(maximumValue));
         }
     }
-    
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
