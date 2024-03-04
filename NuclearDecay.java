@@ -1,7 +1,9 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -18,6 +20,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 public class NuclearDecay {
     public static class NuclearMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
         private DoubleWritable massExcess = new DoubleWritable();
+        private DoubleWritable occurence = new DoubleWritable(1.0);
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String[] columns = value.toString().split(",");
@@ -25,6 +28,7 @@ public class NuclearDecay {
                 String massExcessColumn = columns[10];
                 try {
                     double massExcessValue = Double.parseDouble(massExcessColumn); 
+                    context.write(new Text(massExcessColumn), occurence);
                     context.write(new Text("Mean: "), new DoubleWritable(massExcessValue));            
                     context.write(new Text("Minimum: "), new DoubleWritable(massExcessValue));             
                     context.write(new Text("Maximum: "), new DoubleWritable(massExcessValue));
@@ -43,6 +47,9 @@ public class NuclearDecay {
         private double sum = 0.0;
         private int count = 0;
         private List<Double> valuesList = new ArrayList<>();
+        private Map<String, Double> mode = new HashMap<>();
+        private double maxCount;
+        String maxKey = null;
         @Override
         public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
             for (DoubleWritable value : values) {
@@ -60,7 +67,16 @@ public class NuclearDecay {
                 if (key.toString().equals("Median: ")) {
                     valuesList.add(currentValue);
                 }
-            }
+                if (!(key.toString().equals("Median: ")) && !(key.toString().equals("Mean: ")) && !(key.toString().equals("Maximum: ")) && !(key.toString().equals("Minimum: "))) {
+                    mode.put(key.toString(), mode.getOrDefault(key.toString(), 0.0) + currentValue);         
+                }
+            } 
+            for (Map.Entry<String, Double> entry : mode.entrySet()) {
+                if (entry.getValue() > maxCount) {
+                    maxKey = entry.getKey();
+                    maxCount = entry.getValue();
+                }
+            }      
         }
 
         @Override
@@ -77,6 +93,8 @@ public class NuclearDecay {
             } else {
                 median = valuesList.get(size / 2);
             }
+            String modeOutputKey = maxKey.replace("Mode: ", "  ");
+            context.write(new Text("Mode: " + modeOutputKey), new DoubleWritable(maxCount));  
             context.write(new Text("Median: "), new DoubleWritable(median));
             context.write(new Text("Minimum: "), new DoubleWritable(minimumValue));
             context.write(new Text("Maximum: "), new DoubleWritable(maximumValue));
