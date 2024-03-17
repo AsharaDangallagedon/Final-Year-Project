@@ -7,7 +7,7 @@ with open("part-r-00000", "r") as file:
     for line in file:
         line = line.strip()
         if "\t" in line:
-            key, value = map(int, line.split('\t'))
+            key, value = map(int, line.split("\t"))
             data[key] = value
 
 frequency_distribution = {}
