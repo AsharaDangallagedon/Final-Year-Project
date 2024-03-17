@@ -11,45 +11,45 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 
-public class NASDAQ {
-    public static class NasdaqMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
-        private DoubleWritable priceRange = new DoubleWritable();
+public class PriceChange {
+    public static class PriceChangeMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+        private DoubleWritable priceChange = new DoubleWritable();
         private Text date = new Text();
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String[] columns = value.toString().split(",");
             if (columns.length >= 5 && !columns[0].equals("Date")) {
                 String dateColumn = columns[0];
-                String highColumn = columns[2];
-                String lowColumn = columns[3];
-                double highValue = Double.parseDouble(highColumn);
-                double lowValue = Double.parseDouble(lowColumn);
-                double range = highValue - lowValue;
+                String openColumn = columns[1];
+                String closeColumn = columns[4];
+                double openValue = Double.parseDouble(openColumn);
+                double closeValue = Double.parseDouble(closeColumn);
+                double change = openValue - closeValue;
                 date.set(dateColumn);
-                priceRange.set(range);
-                context.write(date, priceRange);
+                priceChange.set(change);
+                context.write(date, priceChange);
             }
         }
     }  
 
-    public static class NasdaqReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+    public static class PriceChangeReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
         @Override 
         public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
-            String range = key.toString().replace("Price Range for: ", "  ");
+            String change = key.toString().replace("Price Change for: ", "  ");
             for (DoubleWritable value : values) {
-                context.write(new Text ("Price Range for: " + range), value);
+                context.write(new Text ("Price Change for: " + change), value);
             }      
         }   
     }
     
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "price range calculation");
-        job.setJarByClass(NASDAQ.class);
+        Job job = Job.getInstance(conf, "price change calculation");
+        job.setJarByClass(PriceChange.class);
         job.setInputFormatClass(TextInputFormat.class); 
-        job.setMapperClass(NasdaqMapper.class);
-        job.setCombinerClass(NasdaqReducer.class);
-        job.setReducerClass(NasdaqReducer.class);
+        job.setMapperClass(PriceChangeMapper.class);
+        job.setCombinerClass(PriceChangeReducer.class);
+        job.setReducerClass(PriceChangeReducer.class);
         job.setOutputKeyClass(Text.class); 
         job.setOutputValueClass(DoubleWritable.class); 
         FileInputFormat.addInputPath(job, new Path(args[0]));
