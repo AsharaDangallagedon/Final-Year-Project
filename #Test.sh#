@@ -1,0 +1,28 @@
+echo "Select which problem to test:"
+echo "Problem 1"
+echo "Problem 2"
+echo "Problem 3"
+echo "Problem 4"
+
+read -p "Enter your choice (1-4): " choice
+
+case $choice in
+    1)
+        echo "You chose Problem 1"
+        ;;
+    2)
+        echo "You chose Problem 2"
+        ;;
+    3)
+        echo "You chose Problem 3"
+        ;;
+    4)
+        echo "Compiling NASDAQ.java..."
+        javac NASDAQ.java -cp $(hadoop classpath)
+        echo "Creating jar file..."
+        jar cvf nasdaq.jar *.class
+        ;;
+    *)
+        echo "Invalid choice. Please choose a number from 1 to 4."
+        ;;
+esac

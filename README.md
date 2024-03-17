@@ -11,7 +11,7 @@ hadoop fs -get WordCountOutput1
 //note that if the folder is already on the local system, you will get an error. In order to avoid this issue, you may want to eliminate the already existing folder using rm -r *nameoffolder* or by just directly deleting it off from the file system
 cd WordCountOutput
 cat part-r-00000
-//use cd .. to go back to the PROJECT folderm the folder where you run your main commands
+//use cd .. to go back to the "PROJECT" folder 
 
 When running WordCount use the following commands:
 ssh bigdata
