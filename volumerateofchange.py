@@ -14,7 +14,6 @@ with open("VolumeRateofChangeOutput/part-r-00000", "r") as file:
             date = datetime.strptime(date, "%Y-%m-%d")
             dates.append(date)
             volumeChange.append(Volumerateofchange)
-
 plt.figure(figsize=(12, 7))
 plt.plot(dates, volumeChange, color="#2a2a2a", marker="o", linestyle="-")
 plt.title("Volume Rate of Change for this company stock")

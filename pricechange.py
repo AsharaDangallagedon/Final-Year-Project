@@ -5,7 +5,7 @@ from datetime import datetime
 
 dates = []
 priceChange = []
-with open("part-r-00000", "r") as file:
+with open("PriceChangeOutput/part-r-00000", "r") as file:
     for line in file:
         if line.startswith("Price Change for: "):
             parts = line.strip().split()
@@ -19,7 +19,7 @@ plt.figure(figsize=(12, 7))
 plt.plot(dates, priceChange, color="#2a2a2a", marker="o", linestyle="-")
 plt.title("Price Change over time for this company stock")
 plt.xlabel("Date")
-plt.ylabel("Daily Price Change")
+plt.ylabel("Daily Price Change (change in $)")
 plt.yticks(range(-36,19,2)) 
 plt.grid(True, which="both")
 plt.savefig("change.png")
