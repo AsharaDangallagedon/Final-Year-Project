@@ -5,7 +5,7 @@ from datetime import datetime
 
 dates = []
 volumeChange = []
-with open("part-r-00000", "r") as file:
+with open("VolumeRateofChangeOutput/part-r-00000", "r") as file:
     for line in file:
         if line.startswith("Volume Rate of Change for: "):
             parts = line.strip().split()
