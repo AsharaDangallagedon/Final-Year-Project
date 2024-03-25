@@ -22,7 +22,7 @@ public class RSI {
             if (columns.length >= 7 && !columns[0].equals("Date")) {
                 double closePrice = Double.parseDouble(columns[4]);
                 closePrices.add(closePrice);
-                if (closePrices.size() > 14) {
+                if (closePrices.size() > 30) {
                     double upwards = 0.0;
                     double downwards = 0.0;
                     for (int i = 1; i < closePrices.size(); i++) {
@@ -33,8 +33,8 @@ public class RSI {
                             downwards += 0 - difference;
                         }
                     }
-                    double averageUpwards = upwards/14;
-                    double averageDownwards = downwards/14;
+                    double averageUpwards = upwards/30;
+                    double averageDownwards = downwards/30;
                     double relativestrenght;
                     if (averageDownwards == 0) { 
                         relativestrenght = 99.0;
