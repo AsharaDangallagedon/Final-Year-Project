@@ -17,9 +17,9 @@ with open("VolumeRateofChangeOutput/part-r-00000", "r") as file:
 
 plt.figure(figsize=(12, 7))
 plt.plot(dates, volumeChange, color="#2a2a2a", marker="o", linestyle="-")
-plt.title("Volume Rate of Change over time for this company stock")
+plt.title("Volume Rate of Change for this company stock")
 plt.xlabel("Date")
-plt.ylabel("Daily Volume Rate of Change")
-plt.yticks(range(0, 81)) 
+plt.ylabel("Daily Volume Rate of Change (change in %)")
+plt.yticks(range(-90, 1000, 50)) 
 plt.grid(True)
 plt.savefig("volumerateofchange.png")
