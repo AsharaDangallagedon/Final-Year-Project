@@ -22,4 +22,26 @@ Week 10: During this week, most of my efforts were concentrated towards finishin
 
 Term 2
 
-Week 1: During this week I started experimenting with the dataset
+Week 1: During this week I started experimenting with the dataset "NuclearDecay.csv" and made some progress regarding the calculation of the mean for the variable "massExcessUncertainty". However, not much progress has been made since I was unsure how to calculate other variables from the same java file.
+
+Week 2: During this week, I partially managed to calculate the mode, that is, I calculated the cumulative frequencies for each of the values in the "massExcessUncertainty" column and outputted them using mapReduce. However, calculating the mode proved to be a bit difficult as many calculation methods proved to be unsuccessful.
+
+Week 3: During this week, I looked up resources on how to calculate the mode whilst utilising only the mapper and reducer classes but this proved to be quite difficult to implement in hadoop for my specific scenario. Due to this reason, I had trouble making any progress for this week.
+
+Week 4: During this week, I looked up resources for ways in order to output mutilple calculations under one single output file and after some research and some talks with a few other students, I found out that it was possible to context.write() many times and that there existed a method called cleanup which is called after all the map tasks a re completed.
+
+Week 5: During this week, I managed to calculate the minimum and maximum values for the variable "massExcessUncertainty" from the dataset "NuclearDecay.csv". I decided that I was going to calculate all variables separetely in different java files and congregate everything at the end.
+
+Week 6: During this week, I managed to calculate the median and mode for the NuclearDecay.csv dataset separetely (in different java files). However, at the end of this week I tried to aggregrate all the separate variable calculations under one single java file, which was successful to a certain extent.
+
+Week 7: During this week, I managed to finally implement the mode and median calculations into NuclearDecay.java. Thus, I managed to get the java file to output all variables under a single file. In the end, I deleted any unnecessary java files.
+
+Week 8: During this week, I wrote a java file that calculated the cumulative frequencies for each of the values in the "massExcessUncertainty" column and I used python to generate a graph based on those values. Its important to note that I reused the code that I wrote for the parital calculation of the mode for problem 3 and I borrowed a code snippets regarding the calculation of the interval and length of the bars as I was not too familiar with matplotlib (only using it a few times for my machine learning module)
+
+Week 9: During this week, I managed to calculate the daily price range and change for a certain stock from a NASDAQ dataset. This calculation did not prove to be difficult at all since it was very basic. Moreover, I generated a graph for the calculation of the price range/change using python.
+
+Week 10: During this week, I managed to calculate the volume rate of change for the same stock and generated a graph using python in order to visualise the daily volume rate of change for that stock. The calculations were not too complicated as the equation for this calculation was basic. Moreover, during this week I started to work on my report.
+
+Week 11: By this week, most of the code was finished as I managed to calculate the final metric for problem 4 which was the RSI. This calculation proved to be a bit more complicated than the others as the equation can be confusing, nevertheless, after some research it did not prove to be too difficult. Moreover, By this week I was nearly finished with the Rationale, the Professional Issues and the Literature Review sections of my code. However, my final draft to my supervisor was somewhat incomplete and the feedback I received was limited.
+
+Week 12: During this week, I mainly worked on the remaining sections of my report. However, I also made slight changes to my shell script and to my RegexSearch.java file such that it is now capable of taking a regex expression as input directly from the command line.
