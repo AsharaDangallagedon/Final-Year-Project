@@ -19,7 +19,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 public class RegexSearch {
     public static class SearchMapper extends Mapper<LongWritable, Text, Text, Text> {
         private Text locationText = new Text();
-        private Pattern pattern;
         private boolean divTag=false;
         private Pattern startPattern = Pattern.compile("<div id=\"main-text\">");
         private Pattern endPattern = Pattern.compile("<div id=\"bibliography\">");
@@ -28,6 +27,8 @@ public class RegexSearch {
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException { 
             Matcher startMatcher = startPattern.matcher(value.toString());
             Matcher endMatcher = endPattern.matcher(value.toString());
+            Configuration conf = context.getConfiguration();
+            String regexPattern = conf.get("regex pattern");
             if (startMatcher.matches()) {
                 divTag = true;
             }
@@ -35,7 +36,7 @@ public class RegexSearch {
                 divTag = false;
             }
             if (divTag) {
-                Matcher contentMatcher = Pattern.compile("\\b(?!https?|href)\\w*(?i)h\\w*").matcher(value.toString());
+                Matcher contentMatcher = Pattern.compile(regexPattern).matcher(value.toString());
                 while (contentMatcher.find()) {
                     String matchedString = contentMatcher.group();
                     locationText.set("Line " + key);
@@ -66,6 +67,7 @@ public class RegexSearch {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
+        conf.set("regex pattern", args[2]); 
         Job job = Job.getInstance(conf, "Regex Search");
         job.setJarByClass(RegexSearch.class);
         job.setInputFormatClass(LineNumberInputFormat.class); 

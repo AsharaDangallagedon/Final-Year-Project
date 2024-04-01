@@ -22,7 +22,7 @@ case $choice in
         jar cvf regexsearch.jar linenumberinputformat.jar *.class
         hadoop fs -rm -r RegexSearchOutput
         rm -r RegexSearchOutput
-        hadoop jar regexsearch.jar RegexSearch philosophy RegexSearchOutput
+        hadoop jar regexsearch.jar RegexSearch philosophy RegexSearchOutput "h\\w+"
         hadoop fs -get RegexSearchOutput
         cd RegexSearchOutput
         cat part-r-00000
