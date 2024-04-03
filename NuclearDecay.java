@@ -19,7 +19,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 public class NuclearDecay {
     public static class NuclearMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
-        private DoubleWritable massExcess = new DoubleWritable();
         private DoubleWritable occurence = new DoubleWritable(1.0);
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {

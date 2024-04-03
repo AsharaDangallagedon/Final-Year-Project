@@ -30,6 +30,12 @@ case $choice in
     3)
         javac NuclearDecay.java -cp $(hadoop classpath)
         jar cvf nucleardecay.jar *.class
+        hadoop fs -rm -r NuclearDecayOutput
+        rm -r NuclearDecayOutput
+        hadoop jar nucleardecay.jar NuclearDecay NuclearDecay.csv NuclearDecayOutput
+        hadoop fs -get NuclearDecayOutput
+        cd NuclearDecayOutput
+        cat part-r-00000
         ;;
     4)
         javac NASDAQ.java -cp $(hadoop classpath)

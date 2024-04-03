@@ -31,7 +31,7 @@ public class NuclearDecayDistribution {
     }
 
     public static class DistributionReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
-        private final IntWritable mode = new IntWritable();
+        private final IntWritable cumulativefreq = new IntWritable();
         @Override
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
             if (!key.toString().equals("AP") && !key.toString().equals("massExcessUncertainty")) {
@@ -39,8 +39,8 @@ public class NuclearDecayDistribution {
                 for (IntWritable value : values) {
                     sum += value.get();
                 }
-                mode.set(sum);
-                context.write(key, mode);
+                cumulativefreq.set(sum);
+                context.write(key, cumulativefreq);
             }
         }
     }
