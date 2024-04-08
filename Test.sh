@@ -28,18 +28,85 @@ case $choice in
         cat part-r-00000
         ;;
     3)
-        javac NuclearDecay.java -cp $(hadoop classpath)
-        jar cvf nucleardecay.jar *.class
-        hadoop fs -rm -r NuclearDecayOutput
-        rm -r NuclearDecayOutput
-        hadoop jar nucleardecay.jar NuclearDecay NuclearDecay.csv NuclearDecayOutput
-        hadoop fs -get NuclearDecayOutput
-        cd NuclearDecayOutput
-        cat part-r-00000
+        echo "Which task should I perform for Nuclear Decay?"
+        echo "1) Frequency Distribution"
+        echo "2) Order Statistics Calculations"
+        read -p "Enter your choice (1-2): " taskChoice
+
+        if [ "$taskChoice" = "1" ]; then
+            javac NuclearDecayDistribution.java -cp $(hadoop classpath)
+            jar cvf nucleardecaydistribution.jar *.class
+            hadoop fs -rm -r NuclearDecayDistributionOutput
+            rm -r NuclearDecayDistributionOutput
+            hadoop jar nucleardecaydistribution.jar NuclearDecayDistribution NuclearDecay.csv NuclearDecayDistributionOutput
+            hadoop fs -get NuclearDecayDistributionOutput
+            cd NuclearDecayDistributionOutput
+            cat part-r-00000
+            
+        elif [ "$taskChoice" = "2" ]; then
+            javac NuclearDecay.java -cp $(hadoop classpath)
+            jar cvf nucleardecay.jar *.class
+            hadoop fs -rm -r NuclearDecayOutput
+            rm -r NuclearDecayOutput
+            hadoop jar nucleardecay.jar NuclearDecay NuclearDecay.csv NuclearDecayOutput
+            hadoop fs -get NuclearDecayOutput
+            cd NuclearDecayOutput
+            cat part-r-00000
+        else
+            echo "Invalid choice. Please choose a number of either 1 or 2."
+        fi
         ;;
     4)
-        javac NASDAQ.java -cp $(hadoop classpath)
-        jar cvf nasdaq.jar *.class
+        echo "Which Metric should be calculated for Problem 4?"
+        echo "1) Trading Range"
+        echo "2) Price Change"
+        echo "3) Volume Rate of Change"
+        echo "4) RSI"
+        read -p "Enter your choice (1-4): " taskChoice
+
+        if [ "$taskChoice" = "1" ]; then
+            javac TradingRange.java -cp $(hadoop classpath)
+            jar cvf tradingrange.jar *.class
+            hadoop fs -rm -r RangeOutput
+            rm -r RangeOutput
+            hadoop jar tradingrange.jar TradingRange Stock_Data/stocks/A.csv RangeOutput
+            hadoop fs -get RangeOutput
+            cd RangeOutput
+            cat part-r-00000
+            
+        elif [ "$taskChoice" = "2" ]; then
+            javac PriceChange.java -cp $(hadoop classpath)
+            jar cvf pricechange.jar *.class
+            hadoop fs -rm -r PriceChangeOutput
+            rm -r PriceChangeOutput
+            hadoop jar pricechange.jar PriceChange Stock_Data/stocks/A.csv PriceChangeOutput
+            hadoop fs -get PriceChangeOutput
+            cd PriceChangeOutput
+            cat part-r-00000
+
+        elif [ "$taskChoice" = "3" ]; then
+            javac VolumeChange.java -cp $(hadoop classpath)
+            jar cvf volumechange.jar *.class
+            hadoop fs -rm -r VolumeRateofChangeOutput
+            rm -r VolumeRateofChangeOutput
+            hadoop jar volumechange.jar VolumeChange Stock_Data/stocks/A.csv VolumeRateofChangeOutput
+            hadoop fs -get VolumeRateofChangeOutput
+            cd VolumeRateofChangeOutput
+            cat part-r-00000
+        
+        elif [ "$taskChoice" = "4" ]; then
+            javac RSI.java -cp $(hadoop classpath)
+            jar cvf rsi.jar *.class
+            hadoop fs -rm -r RSIoutput
+            rm -r RSIoutput
+            hadoop jar rsi.jar RSI Stock_Data/stocks/A.csv RSIoutput
+            hadoop fs -get RSIoutput
+            cd RSIoutput
+            cat part-r-00000
+
+        else
+            echo "Invalid choice. Please choose a number of either 1 or 2."
+        fi
         ;;
     *)
         echo "Invalid choice. Please choose a number from 1 to 4."
