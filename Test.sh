@@ -113,6 +113,16 @@ case $fileChoice in
                     echo "Invalid choice. Please choose a number from 1 to 4."
                 fi
                 ;;
+            5)  
+                javac NuclearDecay.java -cp $(hadoop classpath)
+                jar cvf nucleardecay.jar *.class
+                hadoop fs -rm -r output21
+                rm -r output21
+                hadoop jar nucleardecay.jar NuclearDecay output20 output21
+                hadoop fs -get output21
+                cd output21
+                cat part-r-00000
+                ;;
             *)
                 echo "Invalid choice. Please choose a number from 1 to 4."
                 ;;

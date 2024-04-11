@@ -12,13 +12,17 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
+//class for calculating the frequency distribution of mass excess uncertainty values 
 public class NuclearDecayDistribution {
+    //mapper class is used to emit each mass excess uncertainty value alongside its occurence
     public static class DistributionMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
         private Text massExcessUncertainty = new Text();
         private IntWritable occurence = new IntWritable(1);
         @Override
+        //map method iterates through each entry in the massExcesUncertainty column
         public void map(LongWritable key, Text currentline, Context context) throws IOException, InterruptedException {
             String[] columns = currentline.toString().split(",");
+            //ensuring that there are enough columns in the dataset to emit the key-value pairs
             if (columns.length >= 11) {
                 try {
                     massExcessUncertainty.set(columns[10]);
@@ -29,11 +33,13 @@ public class NuclearDecayDistribution {
             }
         }
     }
-
+    //reducer class aggregates the occurence counts of mass excess uncertainty values
     public static class DistributionReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         private final IntWritable cumulativefreq = new IntWritable();
         @Override
+        //reduce method is used to calculate the cumulative frequency of each mass excess value
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+            //two values (AP and massExcessUncertainty) are the only non-numerical values that show up in the massExcessUncertainty column
             if (!key.toString().equals("AP") && !key.toString().equals("massExcessUncertainty")) {
                 int sum = 0;
                 for (IntWritable value : values) {
@@ -44,7 +50,8 @@ public class NuclearDecayDistribution {
             }
         }
     }
-    public static void main(String[] args) throws Exception {
+    //main method holds the configurations required to execute a hadoop job
+        public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "distribution calculation");
         job.setJarByClass(NuclearDecayDistribution.class);
