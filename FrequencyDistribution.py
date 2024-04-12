@@ -16,6 +16,10 @@ with open("NuclearDecayDistributionOutput/part-r-00000", "r") as file:
 #dictionary used to store the cumulative frequency distribution
 frequency_distribution = {}
 #calculates the cumulative frequency for the mass excess uncertainty intervals
+#I borrowed the below code from these sources:
+#https://stackoverflow.com/questions/41551658/how-to-create-a-frequency-distribution-table-on-given-data-with-python-in-jupyte
+#https://stackoverflow.com/questions/40825208/python-histogram-how-to-find-the-midpoint-of-bin-with-the-maximum-frequency
+#https://www.geeksforgeeks.org/how-to-create-frequency-tables-in-python/
 for i in range(3, 26, 2):
     frequency_distribution[i] = sum(data.get(j, 0) for j in range(i, i+2))
 #calculates the midpoints of each interval
