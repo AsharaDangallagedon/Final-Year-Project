@@ -16,14 +16,25 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-
-//nuclear decay class that calculates basic order statistics for mass excess uncertainty values
+/**
+ * @author Ashara Dangallage don
+ * NuclearDecay class calculates the basic order statistics for mass excess uncertainty values
+ */
 public class NuclearDecay {
-    //mapper extracts mass excess uncertainty values and emits key-value pairs
+    /**
+     * Mapper class extracts mass excess uncertainty values from a csv file and emits key-value pairs 
+     */
     public static class NuclearMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
         private DoubleWritable occurence = new DoubleWritable(1.0);
+        /**
+         * Map method iterates through each entry in the massExcesUncertainty column
+         * @param key The key represents the byte offset of the input data line
+         * @param values The values are the contents of the line
+         * @param context The context object is required for Mapper/Reducer classes to interact with the Hadoop system
+         * @throws IOException This error occurs in case of issues when reading from the file
+         * @throws InterruptedException This error occurs in case interruptions occur during the execution of the Hadoop job
+         */
         @Override
-        //map method processes each entry of the column "massExcessUncertainty"
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String[] columns = value.toString().split(",");
             //ensuring that there are enough columns in the dataset to emit the key-value pairs
@@ -45,8 +56,9 @@ public class NuclearDecay {
             }
         }
     }
-    
-    // Reducer class computes basic order statistics of mass excess uncertainty values
+    /**
+     * Reducer class computes basic order statistics of mass excess uncertainty values
+     */
     public static class NuclearReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
         private double minimumValue = 99.0;
         private double maximumValue;
@@ -56,8 +68,15 @@ public class NuclearDecay {
         private Map<String, Double> mode = new HashMap<>();
         private double maxCount;
         String maxKey = null;
+        /**
+         * Reduce method is used to aggregate and process the key-value pairs
+         * @param key The key represents a prefix of the order statistic being calculated or the mass excess value itself
+         * @param values The values are a collection of mass excess values of occurences
+         * @param context The context object is required for Mapper/Reducer classes to interact with the Hadoop system
+         * @throws IOException This error occurs in case of issues when writing to the output file
+         * @throws InterruptedException This error occurs in case interruptions occur during the execution of the Hadoop job
+         */
         @Override
-        //reduce method is used to aggregate and process the key-value pairs
         public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
             for (DoubleWritable value : values) {
                 double currentValue = value.get();
@@ -91,7 +110,11 @@ public class NuclearDecay {
                 }
             }      
         }
-        //cleanup method is used to emit the final results after processing all the key-value pairs
+        /**
+         * Cleanup method is used to emit the final results after the reducer has processed all keys and values
+         * It Emits the final computed statistics for mean, median, minimum, maximum, and mode
+         * @param context The context object provides the means for the Reducers output to be conveyed back to Hadoop
+         */
         @Override
         protected void cleanup(Context context) throws IOException, InterruptedException {
             //compute and emit mean 
@@ -116,7 +139,10 @@ public class NuclearDecay {
             context.write(new Text("Maximum: "), new DoubleWritable(maximumValue));
         }
     }
-    //hadoop job configuration are held in the main method
+    /**
+     * Main method holds the configurations required to execute a hadoop job
+     * @param args args specifies the input and output paths
+    */
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         Job combinedJob = Job.getInstance(conf, "combined calculation");

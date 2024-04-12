@@ -12,12 +12,27 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-//RSI class is used to calculate the rsi indicator for the dataset
+/**
+ * @author Ashara Dangallage don
+ * RSI class is used to calculate the rsi indicator for the dataset
+ */
 public class RSI {
-    //the mapper extracts price data (open and close) in order to calculate the RSI
+    /**
+     * Mapper class extracts price data (open and close) in order to calculate the RSI
+     * @returns A text is returned as a key which represents the Date
+     * @returns A DoubleWritable is returned as a value which represents the RSI
+     */
     public static class RSIMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
         //array list keeps track of the closing prices of the financial data
         private ArrayList<Double> closePrices = new ArrayList<>();
+        /**
+         * Map method processes each line of the input data
+         * @param key The key represents the byte offset of the input data line
+         * @param values The values are the contents of the line
+         * @param context The context object is required for Mapper/Reducer classes to interact with the Hadoop system
+         * @throws IOException This error occurs in case of issues when reading from the file
+         * @throws InterruptedException This error occurs in case interruptions occur during the execution of the Hadoop job
+         */
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String[] columns = value.toString().split(",");
@@ -58,8 +73,20 @@ public class RSI {
             }
         }
     }
-    //Reducer class aggregates the key value pairs emitted by the mapper
+    /**
+     * Reducer class aggregates the key value pairs emitted by the mapper
+     * @returns A text is returned as a key which represents the Date
+     * @returns A DoubleWritable is returned as a value which represents the RSI
+     */
     public static class RSIReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+        /**
+         * Reduce method processes each key-value pair emitted by the mapper
+         * @param key The key represents a date
+         * @param values The values are a collection of RSI values
+         * @param context The context object is required for Mapper/Reducer classes to interact with the Hadoop system
+         * @throws IOException This error occurs in case of issues when writing to the output file
+         * @throws InterruptedException This error occurs in case interruptions occur during the execution of the Hadoop job
+         */
         @Override
         public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
             //Had a problem regarding the duplication of this specific string so I replaced it with blank space
@@ -70,7 +97,10 @@ public class RSI {
             }
         }
     }
-    //main method holds the configurations necessary for the hadoop job
+    /**
+     * Main method holds the configurations necessary for the hadoop job
+     * @param args args specifies the input and output paths
+    */
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "RSI Calculation");

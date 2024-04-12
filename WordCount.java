@@ -10,15 +10,28 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-
-//WordCount class for counting occurences of words from a collection of poem related web pages
+/**
+ * @author Ashara Dangallage don
+ * WordCount class counts the occurences of worsd from a collection of poetry related webpages
+ */
 public class WordCount {
-    //Mapper class for WordCount which calculates emits a count of one for each word
+    /**
+     * Mapper class is used to count words in the input text file
+     * The output is the word itself alongside its count (1) 
+     */
     public static class TokenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
         private final static IntWritable one = new IntWritable(1);
         private Text wordText = new Text();
         private boolean div = false;
-        //map method for processing each line of input text
+        /**
+         * Map method processes each line of the input text
+         * @param key The key represents the byte offset of the input data line
+         * @param values The values are the contents of the line
+         * @param context The context object is required for Mapper/Reducer classes to interact with the Hadoop system
+         * @throws IOException This error occurs in case of issues when reading from the file
+         * @throws InterruptedException This error occurs in case interruptions occur during the execution of the Hadoop job
+         */
+        @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             String line = value.toString();
             //div tags are used in here in order to ascertain that the line in question is within a section of the input text
@@ -43,20 +56,34 @@ public class WordCount {
             }
         }
     }
-    //reducer class is used to aggregate the count of the words
+    /**
+     * Reducer class is used for aggregating the word occurences 
+     */
     public static class IntSumReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         private IntWritable count = new IntWritable();
-        //the reduce method actuall aggregates the count of each word by using a sum variable
+        /**
+         * Reduce method is used to aggregate the count of each word by using a sum variable
+         * @param key The key represents a word
+         * @param values The values are a collection of word occurences
+         * @param context The context object is required for Mapper/Reducer classes to interact with the Hadoop system
+         * @throws IOException This error occurs in case of issues when writing to the output file
+         * @throws InterruptedException This error occurs in case interruptions occur during the execution of the Hadoop job
+         */
+        @Override
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
             int sum = 0;
             for (IntWritable val : values) {
                 sum += val.get();
             }
             count.set(sum);
-            context.write(key, count); //occurence of each word is outputted from the reducer
+            //occurence of each word is outputted from the reducer
+            context.write(key, count); 
         }
     }
-    //main method holds the configurations to run the hadoop job
+    /**
+     * Main method holds the configurations to run the hadoop job
+     * @param args args specifies the input and output paths
+    */
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "wordcount");

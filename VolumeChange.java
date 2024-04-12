@@ -10,16 +10,30 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-//VolumeChange class for calculating the volume rate of change
+/**
+ * @author Ashara Dangallage don
+ * VolumeChange class for calculating the volume rate of change
+ */
 public class VolumeChange {
-    //mapper class is used to calculate the volume rate of change and emits it to the reducer
+    /**
+     * Mapper class is used to calculate the volume rate of change and emits it to the reducer
+     * @returns A text is returned as a key which represents the Date
+     * @returns A DoubleWritable is returned as a value which represents the Volume Rate of Change
+     */
     public static class VolumeChangeMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
         private DoubleWritable volumeChange = new DoubleWritable();
         private Text date = new Text();
         //variable used to keep track of the previous volume
         private double previousVolume = 0.0;
+        /**
+         * Map method extract volume data from dataset
+         * @param key The key represents the byte offset of the input data line
+         * @param values The values are the contents of the line
+         * @param context The context object is required for Mapper/Reducer classes to interact with the Hadoop system
+         * @throws IOException This error occurs in case of issues when reading from the file
+         * @throws InterruptedException This error occurs in case interruptions occur during the execution of the Hadoop job
+         */
         @Override
-        //map method extract volume data from dataset
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String[] columns = value.toString().split(",");
             //checks if the input line contains the necessary amount of columns to actually process data
@@ -39,10 +53,21 @@ public class VolumeChange {
             }
         }
     }  
-    //reducer class aggregates all the key-value pairs emitted by the mapper
+    /**
+     * Reducer class aggregates all the key-value pairs emitted by the mapper
+     * @returns A text is returned as a key which represents the Date
+     * @returns A DoubleWritable is returned as a value which represents the Volume Rate of Change
+     */
     public static class VolumeChangeReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+        /**
+         * Reduce method iterates through all the key-vlaue pairs
+         * @param key The key represents a date
+         * @param values The values are a collection of volume rate of change values
+         * @param context The context object is required for Mapper/Reducer classes to interact with the Hadoop system
+         * @throws IOException This error occurs in case of issues when writing to the output file
+         * @throws InterruptedException This error occurs in case interruptions occur during the execution of the Hadoop job
+         */
         @Override 
-        //reduce method iterates through all the key-vlaue pairs
         public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
             //I had a problem regarding the duplication of code so I replaced it with a black space
             String volumeRateChange = key.toString().replace("Volume Rate of Change for:", "  ");
@@ -52,7 +77,10 @@ public class VolumeChange {
             }      
         }   
     }
-    //main method holds the necessary configurations in order to run the hadoop job
+    /**
+     * Main method holds the necessary configurations in order to run the hadoop job
+     * @param args args specifies the input and output paths
+    */
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "Volume rate of change calculation");

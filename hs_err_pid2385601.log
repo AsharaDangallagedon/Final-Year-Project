@@ -1,0 +1,406 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Cannot create worker GC thread. Out of system resources.
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Zero Based Compressed Oops mode in which the Java heap is
+#     placed in the first 32GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 32GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (workerManager.hpp:87), pid=2385601, tid=2385601
+#
+# JRE version:  (17.0.10+7) (build )
+# Java VM: OpenJDK 64-Bit Server VM (17.0.10+7, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, linux-amd64)
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E" (or dumping to /home/cim/ug/zkac422/PROJECT/core.2385601)
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Denv.class.path=.:/apps/jade/lib/jade.jar:/apps/share/java/rhulDrawing:/apps/jade/lib/jade.jar:/apps/share/java/rhulDrawing -Dapplication.home=/home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64 -Xms8m -Djdk.module.main=jdk.jcmd jdk.jcmd/sun.tools.jcmd.JCmd 1170618 VM.uptime
+
+Host: Intel(R) Xeon(R) Gold 6252 CPU @ 2.10GHz, 24 cores, 188G, Ubuntu 22.04.4 LTS
+Time: Thu Apr 11 23:35:25 2024 BST elapsed time: 0.012067 seconds (0d 0h 0m 0s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00005597a7369ac0):  JavaThread "Unknown thread" [_thread_in_vm, id=2385601, stack(0x00007ffd9a7a0000,0x00007ffd9af9f000)]
+
+Stack: [0x00007ffd9a7a0000,0x00007ffd9af9f000],  sp=0x00007ffd9af99570,  free space=8165k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0xee0831]  VMError::report_and_die(int, char const*, char const*, __va_list_tag*, Thread*, unsigned char*, void*, void*, char const*, int, unsigned long)+0x1a1
+V  [libjvm.so+0xee141d]  VMError::report_and_die(Thread*, char const*, int, unsigned long, VMErrorType, char const*, __va_list_tag*)+0x2d
+V  [libjvm.so+0x60a3ac]  report_vm_out_of_memory(char const*, int, unsigned long, VMErrorType, char const*, ...)+0xdc
+V  [libjvm.so+0xf1475f]  WorkerManager::add_workers(WorkGang*, unsigned int, unsigned int, unsigned int, os::ThreadType, bool)+0x18f
+V  [libjvm.so+0xf148fa]  WorkGang::initialize_workers()+0x4a
+V  [libjvm.so+0x6f1ec1]  G1CollectedHeap::initialize()+0x6c1
+V  [libjvm.so+0xe8e872]  universe_init()+0xd2
+V  [libjvm.so+0x7ff8b7]  init_globals()+0x37
+V  [libjvm.so+0xe6505d]  Threads::create_vm(JavaVMInitArgs*, bool*)+0x36d
+V  [libjvm.so+0x8bfb52]  JNI_CreateJavaVM+0x52
+C  [libjli.so+0x9c6f]  JavaMain+0x8f
+C  [libjli.so+0xeb80]  CallJavaMainInNewThread+0xb0
+C  [libjli.so+0xbc5d]  ContinueInNewThread+0x5d
+C  [libjli.so+0xd2d4]  JLI_Launch+0x1484
+C  [jcmd+0x1216]  main+0x136
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00007f6c2e3b8fc0, length=0, elements={
+}
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+[error occurred during error reporting (printing all threads), id 0xb, SIGSEGV (0xb) at pc=0x00007f6c2d77a820]
+
+VM state: not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00005597a7365a90] Heap_lock - owner thread: 0x00005597a7369ac0
+
+Heap address: 0x0000000082000000, size: 30688 MB, Compressed Oops mode: Zero based, Oop shift amount: 3
+
+CDS archive(s) mapped at: [0x0000000000000000-0x0000000000000000-0x0000000000000000), size 0, SharedBaseAddress: 0x0000000800000000, ArchiveRelocationMode: 1.
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0, Narrow klass range: 0x0
+
+GC Precious Log:
+<Empty>
+
+Heap:
+ garbage-first heap   total 0K, used 0K [0x0000000082000000, 0x0000000800000000)
+  region size 16384K, 0 young (0K), 0 survivors (0K)
+
+[error occurred during error reporting (printing heap information), id 0xb, SIGSEGV (0xb) at pc=0x00007f6c2dd4411a]
+
+GC Heap History (0 events):
+No events
+
+Dll operation events (1 events):
+Event: 0.003 Loaded shared library /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjava.so
+
+Deoptimization events (0 events):
+No events
+
+Classes unloaded (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+VM Operations (0 events):
+No events
+
+Events (1 events):
+Event: 0.003 Protecting memory [0x00007ffd9a7a0000,0x00007ffd9a7a4000] with protection modes 0
+
+
+Dynamic libraries:
+82000000-800000000 ---p 00000000 00:00 0 
+5597a55c0000-5597a55c1000 r--p 00000000 00:2c 13031577                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/bin/jcmd
+5597a55c1000-5597a55c2000 r-xp 00001000 00:2c 13031577                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/bin/jcmd
+5597a55c2000-5597a55c3000 r--p 00002000 00:2c 13031577                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/bin/jcmd
+5597a55c3000-5597a55c4000 r--p 00002000 00:2c 13031577                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/bin/jcmd
+5597a55c4000-5597a55c5000 rw-p 00003000 00:2c 13031577                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/bin/jcmd
+5597a731b000-5597a73c6000 rw-p 00000000 00:00 0                          [heap]
+7f6bd1b3c000-7f6bd1f23000 rw-p 00000000 00:00 0 
+7f6bd1f23000-7f6bd1f24000 ---p 00000000 00:00 0 
+7f6bd1f24000-7f6bd2190000 rw-p 00000000 00:00 0 
+7f6bd2190000-7f6c19460000 ---p 00000000 00:00 0 
+7f6c19460000-7f6c1a767000 rw-p 00000000 00:00 0 
+7f6c1a767000-7f6c1a84b000 ---p 00000000 00:00 0 
+7f6c1a84b000-7f6c1a850000 rw-p 00000000 00:00 0 
+7f6c1a850000-7f6c1a934000 ---p 00000000 00:00 0 
+7f6c1a934000-7f6c1a939000 rw-p 00000000 00:00 0 
+7f6c1a939000-7f6c1a943000 ---p 00000000 00:00 0 
+7f6c1a943000-7f6c1abb3000 rwxp 00000000 00:00 0 
+7f6c1abb3000-7f6c21da2000 ---p 00000000 00:00 0 
+7f6c21da2000-7f6c22012000 rwxp 00000000 00:00 0 
+7f6c22012000-7f6c224e3000 ---p 00000000 00:00 0 
+7f6c224e3000-7f6c22753000 rwxp 00000000 00:00 0 
+7f6c22753000-7f6c29943000 ---p 00000000 00:00 0 
+7f6c29943000-7f6c29951000 r--p 00000000 00:2c 13031959                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjava.so
+7f6c29951000-7f6c29963000 r-xp 0000e000 00:2c 13031959                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjava.so
+7f6c29963000-7f6c29969000 r--p 00020000 00:2c 13031959                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjava.so
+7f6c29969000-7f6c2996a000 ---p 00026000 00:2c 13031959                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjava.so
+7f6c2996a000-7f6c2996b000 r--p 00026000 00:2c 13031959                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjava.so
+7f6c2996b000-7f6c2996c000 rw-p 00027000 00:2c 13031959                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjava.so
+7f6c2996c000-7f6c2996d000 rw-p 00000000 00:00 0 
+7f6c2996d000-7f6c29975000 rw-s 00000000 00:25 53405                      /tmp/hsperfdata_zkac422/2385601
+7f6c29975000-7f6c2a249000 r--s 00000000 08:02 917671                     /var/lib/sss/mc/passwd
+7f6c2a249000-7f6c2ce70000 r--s 00000000 00:2c 13031981                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/modules
+7f6c2ce70000-7f6c2ce74000 r--p 00000000 00:2c 13031963                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjimage.so
+7f6c2ce74000-7f6c2ce87000 r-xp 00004000 00:2c 13031963                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjimage.so
+7f6c2ce87000-7f6c2ce8d000 r--p 00017000 00:2c 13031963                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjimage.so
+7f6c2ce8d000-7f6c2ce8f000 r--p 0001c000 00:2c 13031963                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjimage.so
+7f6c2ce8f000-7f6c2ce90000 rw-p 0001e000 00:2c 13031963                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjimage.so
+7f6c2ce90000-7f6c2cf90000 rw-p 00000000 00:00 0 
+7f6c2cf90000-7f6c2cf9e000 r--p 00000000 08:02 4719019                    /lib/x86_64-linux-gnu/libm.so.6
+7f6c2cf9e000-7f6c2d01a000 r-xp 0000e000 08:02 4719019                    /lib/x86_64-linux-gnu/libm.so.6
+7f6c2d01a000-7f6c2d075000 r--p 0008a000 08:02 4719019                    /lib/x86_64-linux-gnu/libm.so.6
+7f6c2d075000-7f6c2d076000 r--p 000e4000 08:02 4719019                    /lib/x86_64-linux-gnu/libm.so.6
+7f6c2d076000-7f6c2d077000 rw-p 000e5000 08:02 4719019                    /lib/x86_64-linux-gnu/libm.so.6
+7f6c2d077000-7f6c2d078000 r--p 00000000 08:02 4719030                    /lib/x86_64-linux-gnu/librt.so.1
+7f6c2d078000-7f6c2d079000 r-xp 00001000 08:02 4719030                    /lib/x86_64-linux-gnu/librt.so.1
+7f6c2d079000-7f6c2d07a000 r--p 00002000 08:02 4719030                    /lib/x86_64-linux-gnu/librt.so.1
+7f6c2d07a000-7f6c2d07b000 r--p 00002000 08:02 4719030                    /lib/x86_64-linux-gnu/librt.so.1
+7f6c2d07b000-7f6c2d07c000 rw-p 00003000 08:02 4719030                    /lib/x86_64-linux-gnu/librt.so.1
+7f6c2d07c000-7f6c2d2cf000 r--p 00000000 00:2c 13031992                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/server/libjvm.so
+7f6c2d2cf000-7f6c2dfee000 r-xp 00253000 00:2c 13031992                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/server/libjvm.so
+7f6c2dfee000-7f6c2e27a000 r--p 00f72000 00:2c 13031992                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/server/libjvm.so
+7f6c2e27a000-7f6c2e27b000 ---p 011fe000 00:2c 13031992                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/server/libjvm.so
+7f6c2e27b000-7f6c2e334000 r--p 011fe000 00:2c 13031992                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/server/libjvm.so
+7f6c2e334000-7f6c2e369000 rw-p 012b7000 00:2c 13031992                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/server/libjvm.so
+7f6c2e369000-7f6c2e3c5000 rw-p 00000000 00:00 0 
+7f6c2e3c5000-7f6c2e3ed000 r--p 00000000 08:02 4719016                    /lib/x86_64-linux-gnu/libc.so.6
+7f6c2e3ed000-7f6c2e582000 r-xp 00028000 08:02 4719016                    /lib/x86_64-linux-gnu/libc.so.6
+7f6c2e582000-7f6c2e5da000 r--p 001bd000 08:02 4719016                    /lib/x86_64-linux-gnu/libc.so.6
+7f6c2e5da000-7f6c2e5db000 ---p 00215000 08:02 4719016                    /lib/x86_64-linux-gnu/libc.so.6
+7f6c2e5db000-7f6c2e5df000 r--p 00215000 08:02 4719016                    /lib/x86_64-linux-gnu/libc.so.6
+7f6c2e5df000-7f6c2e5e1000 rw-p 00219000 08:02 4719016                    /lib/x86_64-linux-gnu/libc.so.6
+7f6c2e5e1000-7f6c2e5ee000 rw-p 00000000 00:00 0 
+7f6c2e5ee000-7f6c2e5ef000 r--p 00000000 08:02 4719018                    /lib/x86_64-linux-gnu/libdl.so.2
+7f6c2e5ef000-7f6c2e5f0000 r-xp 00001000 08:02 4719018                    /lib/x86_64-linux-gnu/libdl.so.2
+7f6c2e5f0000-7f6c2e5f1000 r--p 00002000 08:02 4719018                    /lib/x86_64-linux-gnu/libdl.so.2
+7f6c2e5f1000-7f6c2e5f2000 r--p 00002000 08:02 4719018                    /lib/x86_64-linux-gnu/libdl.so.2
+7f6c2e5f2000-7f6c2e5f3000 rw-p 00003000 08:02 4719018                    /lib/x86_64-linux-gnu/libdl.so.2
+7f6c2e5f3000-7f6c2e5f4000 r--p 00000000 08:02 4719028                    /lib/x86_64-linux-gnu/libpthread.so.0
+7f6c2e5f4000-7f6c2e5f5000 r-xp 00001000 08:02 4719028                    /lib/x86_64-linux-gnu/libpthread.so.0
+7f6c2e5f5000-7f6c2e5f6000 r--p 00002000 08:02 4719028                    /lib/x86_64-linux-gnu/libpthread.so.0
+7f6c2e5f6000-7f6c2e5f7000 r--p 00002000 08:02 4719028                    /lib/x86_64-linux-gnu/libpthread.so.0
+7f6c2e5f7000-7f6c2e5f8000 rw-p 00003000 08:02 4719028                    /lib/x86_64-linux-gnu/libpthread.so.0
+7f6c2e5f9000-7f6c2e5fb000 r--p 00000000 08:02 4724029                    /lib/x86_64-linux-gnu/libnss_sss.so.2
+7f6c2e5fb000-7f6c2e602000 r-xp 00002000 08:02 4724029                    /lib/x86_64-linux-gnu/libnss_sss.so.2
+7f6c2e602000-7f6c2e604000 r--p 00009000 08:02 4724029                    /lib/x86_64-linux-gnu/libnss_sss.so.2
+7f6c2e604000-7f6c2e605000 r--p 0000a000 08:02 4724029                    /lib/x86_64-linux-gnu/libnss_sss.so.2
+7f6c2e605000-7f6c2e606000 rw-p 0000b000 08:02 4724029                    /lib/x86_64-linux-gnu/libnss_sss.so.2
+7f6c2e606000-7f6c2e608000 r--p 00000000 08:02 4719023                    /lib/x86_64-linux-gnu/libnss_compat.so.2
+7f6c2e608000-7f6c2e60f000 r-xp 00002000 08:02 4719023                    /lib/x86_64-linux-gnu/libnss_compat.so.2
+7f6c2e60f000-7f6c2e610000 r--p 00009000 08:02 4719023                    /lib/x86_64-linux-gnu/libnss_compat.so.2
+7f6c2e610000-7f6c2e611000 r--p 00009000 08:02 4719023                    /lib/x86_64-linux-gnu/libnss_compat.so.2
+7f6c2e611000-7f6c2e612000 rw-p 0000a000 08:02 4719023                    /lib/x86_64-linux-gnu/libnss_compat.so.2
+7f6c2e612000-7f6c2e613000 ---p 00000000 00:00 0 
+7f6c2e613000-7f6c2e614000 r--p 00000000 00:00 0 
+7f6c2e614000-7f6c2e617000 r--p 00000000 00:2c 13031964                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjli.so
+7f6c2e617000-7f6c2e627000 r-xp 00003000 00:2c 13031964                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjli.so
+7f6c2e627000-7f6c2e62e000 r--p 00013000 00:2c 13031964                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjli.so
+7f6c2e62e000-7f6c2e62f000 r--p 00019000 00:2c 13031964                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjli.so
+7f6c2e62f000-7f6c2e630000 rw-p 0001a000 00:2c 13031964                   /home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64/lib/libjli.so
+7f6c2e630000-7f6c2e632000 rw-p 00000000 00:00 0 
+7f6c2e632000-7f6c2e634000 r--p 00000000 08:02 4718980                    /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f6c2e634000-7f6c2e65e000 r-xp 00002000 08:02 4718980                    /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f6c2e65e000-7f6c2e669000 r--p 0002c000 08:02 4718980                    /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f6c2e669000-7f6c2e66a000 ---p 00000000 00:00 0 
+7f6c2e66a000-7f6c2e66c000 r--p 00037000 08:02 4718980                    /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f6c2e66c000-7f6c2e66e000 rw-p 00039000 08:02 4718980                    /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffd9a7a0000-7ffd9a7a4000 ---p 00000000 00:00 0 
+7ffd9af7f000-7ffd9afa0000 rw-p 00000000 00:00 0                          [stack]
+7ffd9afea000-7ffd9afee000 r--p 00000000 00:00 0                          [vvar]
+7ffd9afee000-7ffd9aff0000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+
+
+VM Arguments:
+jvm_args: -Denv.class.path=.:/apps/jade/lib/jade.jar:/apps/share/java/rhulDrawing:/apps/jade/lib/jade.jar:/apps/share/java/rhulDrawing -Dapplication.home=/home/cim/ug/zkac422/.vscode/extensions/redhat.java-1.29.0-linux-x64/jre/17.0.10-linux-x86_64 -Xms8m -Djdk.module.main=jdk.jcmd 
+java_command: jdk.jcmd/sun.tools.jcmd.JCmd 1170618 VM.uptime
+java_class_path (initial): <not set>
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 12                                        {product} {ergonomic}
+     uint ConcGCThreads                            = 5                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 18                                        {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 16777216                                  {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 16777216                                  {product} {command line, ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 32178700288                               {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 16777216                                  {product} {ergonomic}
+   size_t MinHeapSize                              = 16777216                                  {product} {command line, ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 7602480                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122027880                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122027880                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+   size_t SoftMaxHeapSize                          = 32178700288                            {manageable} {ergonomic}
+     bool UseCompressedClassPointers               = true                           {product lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                           {product lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+CLASSPATH=.:/apps/jade/lib/jade.jar:/apps/share/java/rhulDrawing:/apps/jade/lib/jade.jar:/apps/share/java/rhulDrawing
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/cim/ug/zkac422/.dotnet/tools:/opt/puppetlabs/bin:/apps/x86_64Linux/blast/bin:/apps/x86_64Linux/hmmer:/apps/apache-jena/bin:/apps/pellet/bin:/opt/mpich/ch-p4/bin:/home/cim/ug/zkac422/.dotnet/tools
+USERNAME=zkac422
+SHELL=/bin/bash
+DISPLAY=:1009
+LANG=en_GB.UTF-8
+
+Active Locale:
+LC_ALL=C
+LC_COLLATE=C
+LC_CTYPE=C
+LC_MESSAGES=C
+LC_MONETARY=C
+LC_NUMERIC=C
+LC_TIME=C
+
+Signal Handlers:
+   SIGSEGV: crash_handler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, unblocked
+    SIGBUS: crash_handler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, unblocked
+    SIGFPE: crash_handler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, unblocked
+   SIGPIPE: javaSignalHandler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, blocked
+   SIGXFSZ: javaSignalHandler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, blocked
+    SIGILL: crash_handler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, unblocked
+   SIGUSR2: SR_handler in libjvm.so, mask=00000000000000000000000000000000, flags=SA_RESTART|SA_SIGINFO, blocked
+    SIGHUP: SIG_DFL, mask=00000000000000000000000000000000, flags=none, blocked
+    SIGINT: SIG_DFL, mask=00000000000000000000000000000000, flags=none, blocked
+   SIGTERM: SIG_DFL, mask=00000000000000000000000000000000, flags=none, blocked
+   SIGQUIT: UserHandler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, blocked
+   SIGTRAP: crash_handler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, unblocked
+
+
+Periodic native trim disabled
+
+
+---------------  S Y S T E M  ---------------
+
+OS:
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=22.04
+DISTRIB_CODENAME=jammy
+DISTRIB_DESCRIPTION="Ubuntu 22.04.4 LTS"
+uname: Linux 5.15.0-102-generic #112-Ubuntu SMP Tue Mar 5 16:50:32 UTC 2024 x86_64
+OS uptime: 2 days 16:16 hours
+libc: glibc 2.35 NPTL 2.35 
+rlimit (soft/hard): STACK 8192k/infinity , CORE 0k/infinity , NPROC 800/1000 , NOFILE 1048576/1048576 , AS infinity/infinity , CPU infinity/infinity , DATA infinity/infinity , FSIZE infinity/infinity , MEMLOCK 24757280k/24757280k
+load average: 0.50 0.32 0.23
+
+/proc/meminfo:
+MemTotal:       198058264 kB
+MemFree:        174374224 kB
+MemAvailable:   185963340 kB
+Buffers:          795820 kB
+Cached:         12139724 kB
+SwapCached:            0 kB
+Active:          6398880 kB
+Inactive:       14955332 kB
+Active(anon):      82288 kB
+Inactive(anon):  8979052 kB
+Active(file):    6316592 kB
+Inactive(file):  5976280 kB
+Unevictable:         496 kB
+Mlocked:             496 kB
+SwapTotal:      31249404 kB
+SwapFree:       31249404 kB
+Dirty:              4472 kB
+Writeback:             8 kB
+AnonPages:       8419380 kB
+Mapped:          1795244 kB
+Shmem:            642680 kB
+KReclaimable:     748308 kB
+Slab:            1056848 kB
+SReclaimable:     748308 kB
+SUnreclaim:       308540 kB
+KernelStack:       60688 kB
+PageTables:       128120 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    130278536 kB
+Committed_AS:   34375336 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      321988 kB
+VmallocChunk:          0 kB
+Percpu:            96896 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+FileHugePages:         0 kB
+FilePmdMapped:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:               0 kB
+DirectMap4k:     1202048 kB
+DirectMap2M:    23963648 kB
+DirectMap1G:    178257920 kB
+
+/sys/kernel/mm/transparent_hugepage/enabled: always [madvise] never
+/sys/kernel/mm/transparent_hugepage/defrag (defrag/compaction efforts parameter): always defer defer+madvise [madvise] never
+
+Process Memory:
+Virtual Size: 32944176K (peak: 32944176K)
+Resident Set Size: 19620K (peak: 19620K) (anon: 6760K, file: 12828K, shmem: 32K)
+Swapped out: 0K
+C-Heap outstanding allocations: 24540K, retained: 83K
+glibc malloc tunables: (default)
+
+/proc/sys/kernel/threads-max (system-wide limit on the number of threads): 1546718
+/proc/sys/vm/max_map_count (maximum number of memory map areas a process may have): 65530
+/proc/sys/kernel/pid_max (system-wide limit on number of process identifiers): 4194304
+
+container (cgroup) information:
+container_type: cgroupv2
+cpu_cpuset_cpus: not supported
+cpu_memory_nodes: not supported
+active_processor_count: 24
+cpu_quota: not supported
+cpu_period: not supported
+cpu_shares: not supported
+memory_limit_in_bytes: unlimited
+memory_and_swap_limit_in_bytes: unlimited
+memory_soft_limit_in_bytes: unlimited
+memory_usage_in_bytes: 3449792 k
+memory_max_usage_in_bytes: not supported
+memory_swap_current_in_bytes: unlimited
+memory_swap_max_limit_in_bytes: unlimited
+maximum number of tasks: unlimited
+current number of tasks: 674
+
+VMWare virtualization detected
+Steal ticks since vm start: 0
+Steal ticks percentage since vm start:  0.000
+
+CPU: total 24 (initial active 24) (1 cores per cpu, 1 threads per core) family 6 model 85 stepping 7 microcode 0x5003303, cx8, cmov, fxsr, mmx, 3dnowpref, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, lzcnt, tsc, tscinvbit, avx, avx2, aes, erms, clmul, bmi1, bmi2, adx, avx512f, avx512dq, avx512cd, avx512bw, avx512vl, fma, vzeroupper, clflush, clflushopt, clwb, hv
+CPU Model and flags from /proc/cpuinfo:
+model name	: Intel(R) Xeon(R) Gold 6252 CPU @ 2.10GHz
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon nopl xtopology tsc_reliable nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid avx512f avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xsaves arat pku ospke md_clear flush_l1d arch_capabilities
+
+Online cpus: 0-23
+Offline cpus: 
+BIOS frequency limitation: <Not Available>
+Frequency switch latency (ns): <Not Available>
+Available cpu frequencies: <Not Available>
+Current governor: <Not Available>
+Core performance/turbo boost: <Not Available>
+
+Memory: 4k page, physical 198058264k(174374224k free), swap 31249404k(31249404k free)
+Page Sizes: 4k
+
+vm_info: OpenJDK 64-Bit Server VM (17.0.10+7) for linux-amd64 JRE (17.0.10+7), built on Jan 16 2024 00:00:00 by "admin" with gcc 10.3.0
+
+END.

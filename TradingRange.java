@@ -10,13 +10,25 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-
-//class TradingRange is used to calculate the trading range for a particular stock
+/**
+ * @author Ashara Dangallage don
+ * TradingRange class calculates the trading range for a particular stock
+ */
 public class TradingRange {
+    /**
+     * Mapper class is calculates the trading range and it is then emitted to the reducer
+     */
     public static class RangeMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
         private DoubleWritable tradingRange = new DoubleWritable();
         private Text date = new Text();
-        //map methods iterates through all the entries in the dataset
+        /**
+         * Map method iterates through all the entries in the dataset
+         * @param key The key represents the byte offset of the input data line
+         * @param values The values are the contents of the line
+         * @param context The context object is required for Mapper/Reducer classes to interact with the Hadoop system
+         * @throws IOException This error occurs in case of issues when reading from the file
+         * @throws InterruptedException This error occurs in case interruptions occur during the execution of the Hadoop job
+         */
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String[] columns = value.toString().split(",");
@@ -37,10 +49,19 @@ public class TradingRange {
             }
         }
     }  
-    //reducer class aggregates the data and emits them as output
+     /**
+     * Reducer class aggregates the data and emits it as output
+     */
     public static class RangeReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+        /**
+         * Reduce method iterates through all the key value pairs emitted from the mapper
+         * @param key The key represents a date
+         * @param values The values are a collection of trading range values
+         * @param context The context object is required for Mapper/Reducer classes to interact with the Hadoop system
+         * @throws IOException This error occurs in case of issues when writing to the output file
+         * @throws InterruptedException This error occurs in case interruptions occur during the execution of the Hadoop job
+         */
         @Override 
-        //reduce method iterates through all the key value pairs emitted from the mapper
         public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
             String range = key.toString().replace("Trading Range for: ", "  ");
             for (DoubleWritable value : values) {
@@ -49,7 +70,10 @@ public class TradingRange {
             }      
         }   
     }
-    //main method holds the configuration setup
+    /**
+     * Main method holds the configuration setup
+     * @param args args specifies the input and output paths
+    */
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "trading range calculation");
