@@ -1,0 +1,2 @@
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+output20/part-r-00000 filter=lfs diff=lfs merge=lfs -text
